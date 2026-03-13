@@ -1,14 +1,21 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from .database import engine, Base
 from . import schemas, models, crud, auth
 from .dependencies import get_db
 
 app = FastAPI(title="Anything.ai Task API", version="v1")
-
 Base.metadata.create_all(bind=engine)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
